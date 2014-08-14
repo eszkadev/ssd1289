@@ -26,4 +26,11 @@ void SSD1289_ReleaseFromSleep(void);
 
 void SSD1289_Init(void);
 
+void SetCursor(uint16_t x, uint16_t y);
+void SetArea(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+void DrawPixel(uint16_t x, uint16_t y, uint16_t color);
+void DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
+					uint16_t color);
+void FillScreen(uint16_t color);
+
 #endif

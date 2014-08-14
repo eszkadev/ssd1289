@@ -12,11 +12,19 @@ void SSD1289_Write(short type, uint16_t data)
 	else
 		_LCD_CONTROL_PORT |= (1 << _LCD_RS);
 
-	_LCD_HI_PORT = (data >> 8);
-	_LCD_LO_PORT = data;
+	// Select
+	_LCD_CONTROL_PORT &= ~(1 << _LCD_CS);
+
+	#ifdef PARALLEL_MODE
+		_LCD_HI_PORT = (data >> 8);
+		_LCD_LO_PORT = data;
+	#endif
 
 	_LCD_CONTROL_PORT &= ~(1 << _LCD_WR);
 	_LCD_CONTROL_PORT |= (1 << _LCD_WR);
+
+	// Unselect
+	_LCD_CONTROL_PORT |= (1 << _LCD_CS);
 }
 
 void SSD1289_WriteCommand(uint16_t address, uint16_t data)
@@ -51,10 +59,6 @@ void SSD1289_DisplayON(void)
 
 	// LCD driver AC setting
 	SSD1289_WriteCommand(LCD_DRIVE_AC, 0x0600);
-
-	// RAM data write
-	SSD1289_Write(COMMAND, RAM_DATA);
-	// start write to RAM
 }
 
 void SSD1289_SleepMode(void)
@@ -92,4 +96,39 @@ void SSD1289_Init()
 	#endif
 
 	SSD1289_DisplayON();
+}
+
+void SetCursor(uint16_t x, uint16_t y)
+{
+	SSD1289_WriteCommand(GDDRAM_X_ADDRESS_COUNTER, x);
+	SSD1289_WriteCommand(GDDRAM_Y_ADDRESS_COUNTER, y);
+}
+
+void SetArea(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
+{
+	SSD1289_WriteCommand(HORIZONTAL_RAM_POS, (y2 << 8) | y1);
+	SSD1289_WriteCommand(VERTICAL_RAM_POS_START, x1);
+	SSD1289_WriteCommand(VERTICAL_RAM_POS_END, x2);
+	SetCursor(x1, y1);
+}
+
+void DrawPixel(uint16_t x, uint16_t y, uint16_t color)
+{
+	SetCursor(x, y);
+	SSD1289_WriteCommand(RAM_DATA, color);
+}
+
+void DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
+					uint16_t color)
+{
+	SetArea(x1, y1, x2, y2);
+	SSD1289_Write(COMMAND, RAM_DATA);
+	for(int y = y1; y <= y2; y++)
+		for(int x = x1; x <= x2; x++)
+			SSD1289_Write(DATA, color);
+}
+
+void FillScreen(uint16_t color)
+{
+	DrawRectangle(0, 0, MAX_X, MAX_Y, color);
 }

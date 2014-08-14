@@ -3,8 +3,11 @@
  * Author: Szymon Kłos
 */
 
+#define MAX_X 319
+#define MAX_Y 239
 #define PARALLEL_MODE 1
 // TODO: serial mode
+#define HORIZONTAL 1
 
 // Control port
 
@@ -43,7 +46,7 @@
 
 // SSD1289 Registers
 
-#define OSCILATOR              0x00
+#define OSCILATOR                  0x00
 #define DRIVER_OUTPUT              0x01
 #define LCD_DRIVE_AC               0x02
 #define POWER_CONTROL_1            0x03
