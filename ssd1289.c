@@ -5,6 +5,17 @@
 
 #include "ssd1289.h"
 
+uint16_t RGB(uint8_t r, uint8_t g, uint8_t b)
+{
+	// return RGB-565
+
+	r >>= 3;
+	g >>= 2;
+	b >>= 3;
+
+	return (r << 11) | (g << 5) | b;
+}
+
 void SSD1289_Write(short type, uint16_t data)
 {
 	if(type == COMMAND)
@@ -59,6 +70,8 @@ void SSD1289_DisplayON(void)
 
 	// LCD driver AC setting
 	SSD1289_WriteCommand(LCD_DRIVE_AC, 0x0600);
+
+	SSD1289_WriteCommand(DRIVER_OUTPUT, 0x2B3F);
 }
 
 void SSD1289_SleepMode(void)

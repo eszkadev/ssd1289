@@ -17,6 +17,8 @@ enum
 	DATA
 };
 
+uint16_t RGB(uint8_t r, uint8_t g, uint8_t b);
+
 void SSD1289_Write(short type, uint16_t data);
 void SSD1289_WriteCommand(uint16_t address, uint16_t data);
 

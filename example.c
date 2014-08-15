@@ -16,11 +16,11 @@ int main(void)
 	DrawRectangle(100, 100, 200, 200, 0x0000);
 
 	_delay_ms(1000);
-	FillScreen(0xFF00);
+	FillScreen(RGB(255, 0, 0));
 	_delay_ms(1000);
-	FillScreen(0x0FF0);
+	FillScreen(RGB(0, 255, 0));
 	_delay_ms(1000);
-	FillScreen(0x00FF);
+	FillScreen(RGB(0, 0, 255));
 
 	return 0;
 }
