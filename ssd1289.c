@@ -145,3 +145,50 @@ void FillScreen(uint16_t color)
 {
 	DrawRectangle(0, 0, MAX_X, MAX_Y, color);
 }
+
+void DrawChar(const uint8_t* font, char c, uint16_t x, uint16_t y, uint16_t color)
+{
+	// Font array format:
+	// [0] width
+	// [1] height
+	// [2] character length in bytes
+	// [3] count of characters in a font
+	// [4 ...] data
+
+	// You can download fonts at http://www.henningkarlsen.com/electronics/r_fonts.php
+
+	uint8_t width = pgm_read_byte(font);
+	uint8_t height = pgm_read_byte(font+1);
+	uint8_t char_length = pgm_read_byte(font+2);
+	uint8_t byte = 0 , mask = 0;
+	font = font + 4 + ((c - ' ') * char_length);
+
+	for(int i = 0; i < height; i++)
+	{
+		for(int j = 0; j < width; j++)
+		{
+			if(j % 8 == 0)
+			{
+				byte = pgm_read_byte(font);
+				mask = 0b10000000;
+				font++;
+			}
+			if(byte & mask)
+			{
+				DrawPixel(x + j, y + i, color);
+			}
+			mask >>= 1;
+		}
+	}
+}
+
+void DrawText(const uint8_t* font, char* text, uint16_t x, uint16_t y, uint16_t color)
+{
+	uint8_t length = strlen(text);
+	uint8_t width = pgm_read_byte(font);
+	while(length--)
+	{
+		DrawChar(font, *(text++), x, y, color);
+		x += width;
+	}
+}

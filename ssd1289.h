@@ -8,6 +8,8 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/pgmspace.h>
+#include <string.h>
 
 #include "config.h"
 
@@ -34,5 +36,7 @@ void DrawPixel(uint16_t x, uint16_t y, uint16_t color);
 void DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
 					uint16_t color);
 void FillScreen(uint16_t color);
+void DrawChar(const uint8_t* font, char c, uint16_t x, uint16_t y, uint16_t color);
+void DrawText(const uint8_t* font, char* text, uint16_t x, uint16_t y, uint16_t color);
 
 #endif
