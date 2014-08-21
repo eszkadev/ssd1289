@@ -135,10 +135,15 @@ void DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
 					uint16_t color)
 {
 	SetArea(x1, y1, x2, y2);
-	SSD1289_Write(COMMAND, RAM_DATA);
+	SSD1289_WriteCommand(RAM_DATA, color);
 	for(int y = y1; y <= y2; y++)
 		for(int x = x1; x <= x2; x++)
-			SSD1289_Write(DATA, color);
+		{
+			_LCD_CONTROL_PORT &= ~(1 << _LCD_CS);
+			_LCD_CONTROL_PORT &= ~(1 << _LCD_WR);
+			_LCD_CONTROL_PORT |= (1 << _LCD_WR);
+			_LCD_CONTROL_PORT |= (1 << _LCD_CS);
+		}
 }
 
 void FillScreen(uint16_t color)
